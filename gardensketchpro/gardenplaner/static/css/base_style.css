@@ -19,9 +19,25 @@ main {
     font-family: Jost;
     color: #d8d8d8   
 }
+div.main-content {
+    border: #04AA6D 2px solid;
+    background-color: rgba(236, 220, 220, 0.5) transparent 30%;
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-left: 40rem;
+    margin-right: 40rem;
+    font-size: 16px;
+    
+}
 img.logo {
     height: 150px;
     width: auto;
+}
+img.title {
+    text-align: center;
+    max-width: fit-content;
+    height: auto;
+    width: 100%;
 }
 header, footer {
     padding: 0;
@@ -32,7 +48,8 @@ header {
     color: #afafaf;
 }
 footer {
-    background-color: #afafaf;
+    background-color: #ECF6C4;
+    text-align: center;
 }
 header a {
     color: #d8d8d8;
@@ -52,14 +69,21 @@ header ul.nav li {
     margin: 0 0.5rem;
     padding: 0.5rem;
 }
-h1, h2, h3 { 
-    border-bottom: 2px solid #FFCC00; 
+h1, h2, h3 {  
     padding: 1rem;
-    background-color: transparent;
-   
+    background-color: transparent;   
+}
+h1 {
+    font-size: 54px;
+}
+h3 {
+    font-size: 24px;
 }
 li.spacer {
     flex: 1;
+}
+p.title {
+    text-align: center;
 }
 /* Add a black background color to the top navigation */
 .topnav {
