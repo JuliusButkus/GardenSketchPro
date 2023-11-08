@@ -12,7 +12,7 @@
     <header>
         <ul class="navigation">
             <ul class="nav">
-                <li class="logo"><a href="{% url "index" %}">GardenSketchPro</a></li>
+                <li class="logo"><a href="{% url "index" %}"><img class="logo" src="{% static '/img/logo2.png' %}" alt="GardenSketchPro Logo"></a></li>
                 <div class="dropdown">
                     <button class="dropbtn"><img src="{% static '/img/bars-solid.svg' %}" alt="Bars Icon" style="width: 24px; height: 24px; color: #22511f;">
                       <i class="fa fa-caret-down"></i>
@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 {% comment %} <a href="javascript:void(0);" class="icon" onclick="myFunction()">&#9776;</a> {% endcomment %}
-                <li class="spacer"></li>
+                <li class="spacer center"></li>
                 <li>{% trans "my projects"|title %}</li>
                 {% comment %} {% if user.is_authenticated %}
                     <li>
