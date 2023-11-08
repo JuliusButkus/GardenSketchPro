@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% block title %} Welcome to {{ block.super }}{% endblock title %}
+{% block content %}
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="main-content">
+                <center><h1>{% trans "Welcome to GardenSketchPro" %}</h1></center>
+                <p><h2>Bringing Your Garden Dreams to Life!</p></h2>
+                <ul>
+                </ul>
+            </div>
+        </div>   
+    </div>
+</body>
+{% endblock content %}

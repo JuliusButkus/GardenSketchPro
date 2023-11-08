@@ -11,8 +11,8 @@ User = get_user_model()
 class Type(models.Model):
     name_en = models.CharField(_('name in English language'), max_length=100)
     name_lt = models.CharField(_('name in Lithuanian language'),max_length=100)
-    description_en = models.TextField(_('description in English language'), max_length=1000)
-    description_lt = models.TextField(_('description in English language'), max_length=1000)
+    description_en = models.TextField(_('description in English language'), max_length=1000, blank=True)
+    description_lt = models.TextField(_('description in English language'), max_length=1000, blank=True)
     
     class Meta:
         verbose_name = _("type")
@@ -71,8 +71,8 @@ class PlantTime(models.Model):
 class Color(models.Model):
     name_en = models.CharField(_("name in English language"),max_length=100)
     name_lt = models.CharField(_("name in Lithuanian language"),max_length=100)
-    description_en = models.TextField(_("description in English language"), max_length=1000)
-    description_lt = models.TextField(_("description in Lithuanian language"), max_length=1000)
+    description_en = models.TextField(_("description in English language"), max_length=1000, blank=True)
+    description_lt = models.TextField(_("description in Lithuanian language"), max_length=1000, blank=True)
     
     class Meta:
         verbose_name = _("color")
@@ -84,11 +84,13 @@ class Color(models.Model):
     def get_absolute_url(self):
         return reverse("color_detail", kwargs={"pk": self.pk})
 
+
 class Plant(models.Model):
     name_en = models.CharField(max_length=100, unique=True)
     name_lt = models.CharField(max_length=100, unique=True)
     description_en = models.TextField(max_length=1000, blank=True)
     description_lt = models.TextField(max_length=1000, blank=True)
+    size = models
     type = models.ForeignKey(
         Type,
         verbose_name=_("type"),
@@ -156,7 +158,7 @@ class Zone(models.Model):
         verbose_name_plural = _("zones")
 
     def __str__(self):
-        return self.name
+        return self.name_en
 
     def get_absolute_url(self):
         return reverse("zone_detail", kwargs={"pk": self.pk})
@@ -178,7 +180,7 @@ class ZoneCoposition(models.Model):
         verbose_name_plural = _("zone copositions")
 
     def __str__(self):
-        return self.name
+        return self.zone
 
     def get_absolute_url(self):
         return reverse("zonecoposition_detail", kwargs={"pk": self.pk})
@@ -195,7 +197,7 @@ class SelectedPlant(models.Model):
         verbose_name=_("color"), 
         on_delete=models.CASCADE,
         related_name=_("selected_plant"))
-    blooming_period = models.CharField(_("enter blooming period"), max_length=100)
+    blooming_period = models.CharField(_("enter blooming period"), max_length=100, blank=True)
     qty = models.IntegerField(_('enter quantity'))
     price = models.FloatField(_('enter plants price of unit'),)
     zone_composition = models.ForeignKey(
@@ -210,7 +212,7 @@ class SelectedPlant(models.Model):
         verbose_name_plural = _("selected plants")
 
     def __str__(self):
-        return self.name
+        return self.plant
 
     def get_absolute_url(self):
         return reverse("selectedplant_detail", kwargs={"pk": self.pk}) 
@@ -240,7 +242,7 @@ class Photo(models.Model):
         verbose_name_plural = _("photos")
 
     def __str__(self):
-        return self.name
+        return self.image
 
     def get_absolute_url(self):
         return reverse("photo_detail", kwargs={"pk": self.pk})
