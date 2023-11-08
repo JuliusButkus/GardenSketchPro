@@ -19,28 +19,26 @@ class Type(models.Model):
         verbose_name_plural = _("types")
 
     def __str__(self):
-        return self.name
+        return self.name_en
 
     def get_absolute_url(self):
         return reverse("type_detail", kwargs={"pk": self.pk})
 
 
 class PlantTime(models.Model):
-    month_en = models.CharField(
+    month_en = models.IntegerField(
         choices=[
             (1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'),
             (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'),
             (11, 'November'), (12, 'December'),
-        ],
-        max_length=15
+        ]
     )
-    month_lt = models.CharField(
+    month_lt = models.IntegerField(
         choices=[
             (1, 'Sausis'), (2, 'Vasaris'), (3, 'Kovas'), (4, 'Balandis'), (5, 'Gegužė'),
             (6, 'Birželis'), (7, 'Liepa'), (8, 'Rugpjūtis'), (9, 'Rugsėjis'), (10, 'Spalis'),
             (11, 'Lapkritis'), (12, 'Gruodis'),
-        ],
-        max_length=15
+        ]
     )
     first_day = models.IntegerField(
         choices=[
@@ -64,7 +62,7 @@ class PlantTime(models.Model):
         verbose_name_plural = _("plantTimes")
 
     def __str__(self):
-        return self.name
+        return f'{self.get_month_en_display()} ({self.get_month_lt_display()})'
 
     def get_absolute_url(self):
         return reverse("plantingday_detail", kwargs={"pk": self.pk})
@@ -81,7 +79,7 @@ class Color(models.Model):
         verbose_name_plural = _("colors")
 
     def __str__(self):
-        return self.name
+        return self.name_en
 
     def get_absolute_url(self):
         return reverse("color_detail", kwargs={"pk": self.pk})
@@ -112,7 +110,7 @@ class Plant(models.Model):
         verbose_name_plural = _("plants")
 
     def __str__(self):
-        return self.name
+        return self.name_en
 
     def get_absolute_url(self):
         return reverse("plant_detail", kwargs={"pk": self.pk})
@@ -135,7 +133,7 @@ class GardenProject(models.Model):
         verbose_name_plural = _("garden projects")
 
     def __str__(self):
-        return self.name
+        return self.project_name
 
     def get_absolute_url(self):
         return reverse("gardenproject_detail", kwargs={"pk": self.pk})
