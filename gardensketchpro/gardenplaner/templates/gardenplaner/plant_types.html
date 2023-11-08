@@ -1,23 +1,10 @@
 {% extends "base.html" %}
-{% load statici18n %}
+{% load static i18n %}
 {% block title %}{% trans "Plant types"|capfirst %} {{ block.super }}{% endblock title %}
 {% block content %}
 <h1>{% trans "plant types"|title %}</h1>
 {% comment %} {% include "library/inc/pager_prev_next.html" %} {% endcomment %}
 <ul class="card-list">
-{% for type in type_list %}
-<li class="center">
-    <a href="{% url "book_detail" book.pk %}">
-        {% if book.cover %}
-            <img class="book-cover" src="{{ book.cover.url }}">
-        {% else %}
-            <img class="book-cover" src="{% static "img/default_cover.jpg" %}">
-        {% endif %}            
-        <h4>{{ type.name_en }}</h4>
-    </a> 
-</li>
-{% empty %}
-    <p>{% trans "no types found"|capfirst %}.</p>
-{% endfor %}
+
 </ul>
 {% endblock content %}

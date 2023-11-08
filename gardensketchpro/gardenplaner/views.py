@@ -48,4 +48,24 @@ class PlantTypeListView(generic.ListView):
             )
         return queryset
     
+
+class PlantListView(generic.ListView):
+    model = models.Plant
+    template_name = "gardenplaner/plant_list.html"
+    context_object_name = "plant_list"
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["search"] = True
+        return context
     
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get("query")
+        if query:
+            queryset = queryset.filter(
+                Q(name_en__icontains=query) | 
+                Q(name_lt__icontains=query)  
+            )
+        return queryset    
