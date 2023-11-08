@@ -34,9 +34,9 @@
                         {% for plant in object_list %}
                             <li class="data-menu center">
                                 {% comment %} <h3><a href="{% url 'beer_detail' beer.name %}">{{ beer.name }}</a></h3> {% endcomment %}
-                                <p><strong>{% trans "Price"|capfirst %}:</strong> {{ beer.price }}$</p>
-                                <p><strong>{% trans "Available Liters"|capfirst %}:</strong> {{ beer.qty }}</p>
-                                <p><strong>{% trans "Beer Type"|capfirst %}:</strong> {{ beer.beer_type.name }}</p>
+                                <p><strong>{% trans "Price"|capfirst %}:</strong> {{ beer.price }}$
+                                <strong>{% trans "Available Liters"|capfirst %}:</strong> {{ beer.qty }}
+                                <strong>{% trans "Beer Type"|capfirst %}:</strong> {{ beer.beer_type.name }}</p>
                             </li>
                         {% endfor %}
                         </ul>
