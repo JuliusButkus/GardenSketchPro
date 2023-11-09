@@ -23,6 +23,7 @@ urlpatterns = [
     path('', include('gardenplaner.urls')),
     path('user/', include('userprofile.urls')),
     path('account/', include('django.contrib.auth.urls')),
+    path('i18n/', include('django.conf.urls.i18n')),
     path('admin/', admin.site.urls),
     path('tinymce/', include('tinymce.urls')),
 ]  + (
