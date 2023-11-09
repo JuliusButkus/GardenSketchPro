@@ -43,7 +43,7 @@
                     <li><a href="{% url "login" %}">{% trans "Login"|title %}</a></li>
                     <li><a href="{% url "signup" %}">{% trans "Sign Up"|title %}</a></li>
                 {% endif %}
-                {% comment %} <li>
+                <li>
                     <form class="inline-form" action="{% url "set_language" %}" method="POST">
                         {% csrf_token %}
                         <select name="language" onchange="this.form.submit();">
@@ -54,7 +54,7 @@
                             {% endfor %}
                         </select>
                     </form>
-                </li>  {% endcomment %}
+                </li>  
             </ul>
         </ul>
     </header>
