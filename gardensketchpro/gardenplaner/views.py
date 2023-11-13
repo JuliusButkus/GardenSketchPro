@@ -7,7 +7,6 @@ from django.db.models.query import QuerySet, Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
-from django import forms
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from . import models, forms
@@ -110,4 +109,57 @@ def delete_project_view(request, pk):
 
 def confirm_delete_project_view(request, pk):
     garden_project = get_object_or_404(models.GardenProject, pk=pk)
-    return render(request, 'gardenplaner/confirm_delete_project.html', {'garden_project': garden_project})   
+    return render(request, 'gardenplaner/confirm_delete_project.html', {'garden_project': garden_project}) 
+
+class CreateZoneView(generic.View):
+    template_name = 'gardenplaner/create_zone.html'
+
+    def get(self, request, project_id):
+        garden_project = get_object_or_404(models.GardenProject, pk=project_id)
+        zone_form = forms.ZoneForm()
+        composition_form = forms.ZoneCompositionForm()
+        selected_plant_form = forms.SelectedPlantForm()
+        photo_form = forms.PhotoForm()
+        return render(request, self.template_name, {
+            'zone_form': zone_form,
+            'composition_form': composition_form,
+            'selected_plant_form': selected_plant_form,
+            'photo_form': photo_form,
+            'garden_project': garden_project
+        })
+
+    def post(self, request, project_id):
+        garden_project = get_object_or_404(models.GardenProject, pk=project_id)
+        zone_form = forms.ZoneForm(request.POST)
+        composition_form = forms.ZoneCompositionForm(request.POST)
+        selected_plant_form = forms.SelectedPlantForm(request.POST)
+        photo_form = forms.PhotoForm(request.POST, request.FILES)
+
+        if zone_form.is_valid() and composition_form.is_valid() and selected_plant_form.is_valid() and photo_form.is_valid():
+            zone = zone_form.save(commit=False)
+            zone.garden_project = garden_project
+            zone.save()
+
+            composition = composition_form.save(commit=False)
+            composition.zone = zone
+            composition.save()
+
+            selected_plant = selected_plant_form.save(commit=False)
+            selected_plant.zone_composition = composition
+            selected_plant.save()
+
+            photo = photo_form.save(commit=False)
+            photo.composition = composition
+            photo.save()
+
+            
+
+            return redirect('gardenproject_detail', pk=project_id)
+
+        return render(request, self.template_name, {
+            'zone_form': zone_form,
+            'composition_form': composition_form,
+            'selected_plant_form': selected_plant_form,
+            'photo_form': photo_form,
+            'garden_project': garden_project
+        })

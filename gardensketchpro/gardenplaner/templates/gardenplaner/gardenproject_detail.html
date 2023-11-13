@@ -14,6 +14,9 @@
         {% csrf_token %}
         <button type="submit" class="btn btn-danger"><a href="{% url 'confirm_delete_project' pk=garden_project.pk %}">Delete Project</a></button>
       </form>
+      
+        <button type="submit" class="btn btn-danger"><a href="{% url 'create_zone' project_id=garden_project.pk %}" class="btn btn-success">Create Zone</a></button>
+    
       <a href="{% url 'my_projects' %}" class="btn btn-primary">Back to My Projects</a>
     </div>
   </div>
