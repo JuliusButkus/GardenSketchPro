@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+{% block title %} {{ block.super }}{% endblock title %}
+{% block content %}
+  <h2>Zone Details</h2>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Name (English): {{ zone.name_en }}</h5>
+      <p class="card-text">Name (Lithuanian): {{ zone.name_lt }}</p>
+      <p class="card-text">Length: {{ zone.length }}</p>
+      <p class="card-text">Width: {{ zone.width }}</p>
+      <p class="card-text">Garden Project: {{ zone.garden_project.project_name }}</p>
+      <!-- Add more details as needed -->
+    </div>
+  </div>
+
+  <!-- Display Zone Composition details -->
+  <h3>Zone Composition</h3>
+  <p>Public: {% if zone.zone_coposition.public %}Yes{% else %}No{% endif %}</p>
+
+  <!-- Display Selected Plants details -->
+  <h3>Selected Plants</h3>
+  {% for selected_plant in zone.zone_coposition.selected_plant.all %}
+    <p>Plant: {{ selected_plant.plant.name }} - Color: {{ selected_plant.color.name }} - Blooming Period: {{ selected_plant.blooming_period }} - Quantity: {{ selected_plant.qty }} - Price: {{ selected_plant.price }}</p>
+    <!-- Add more selected plant details as needed -->
+  {% endfor %}
+
+  <!-- Display Photos details -->
+  <h3>Photos</h3>
+  {% for photo in zone.zone_coposition.photo.all %}
+    <img src="{{ photo.image.url }}" alt="{{ photo.image }}">
+    <p>Season: {{ photo.get_season_display }}</p>
+    <!-- Add more photo details as needed -->
+  {% endfor %}
+
+  <a href="{% url 'gardenproject_detail' pk=zone.garden_project.pk %}" class="btn btn-primary">Back to Garden Project</a>
+{% endblock %}

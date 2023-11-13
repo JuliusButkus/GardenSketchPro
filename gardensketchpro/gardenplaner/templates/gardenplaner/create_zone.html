@@ -7,14 +7,10 @@
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ zone_form.as_p }}
-    {{ composition_form.as_p }}
-    {{ selected_plant_form.as_p }}
-    {{ photo_formset.management_form }}
-    {% for form in photo_formset %}
-      {{ form.as_p }}
-    {% endfor %}
     <button type="submit" class="btn btn-primary">Create Zone</button>
   </form>
 
   <a href="{% url 'gardenproject_detail' pk=garden_project.pk %}" class="btn btn-secondary">Cancel</a>
+  
+
 {% endblock %}
