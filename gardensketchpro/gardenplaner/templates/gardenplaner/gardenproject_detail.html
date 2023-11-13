@@ -10,7 +10,10 @@
       <p class="card-text">Created by: {{ garden_project.user.username }}</p>
       <p class="card-text">Public: {% if garden_project.public %}Yes{% else %}No{% endif %}</p>
       <!-- Add more details as needed -->
-
+      <form method="post" action="{% url 'delete_project' pk=garden_project.pk %}" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger"><a href="{% url 'confirm_delete_project' pk=garden_project.pk %}">Delete Project</a></button>
+      </form>
       <a href="{% url 'my_projects' %}" class="btn btn-primary">Back to My Projects</a>
     </div>
   </div>

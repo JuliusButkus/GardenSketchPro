@@ -99,4 +99,15 @@ class GardenProjectDetailView(generic.DetailView):
     model = models.GardenProject
     template_name = "gardenplaner/gardenproject_detail.html"
     context_object_name = "garden_project"
-    
+
+def delete_project_view(request, pk):
+    garden_project = get_object_or_404(models.GardenProject, pk=pk)
+    if request.method == 'POST':
+        garden_project.delete()
+        return redirect('my_projects')
+    return render(request, 'gardenplaner/gardenproject_confirm_delete.html', {'garden_project': garden_project})
+
+
+def confirm_delete_project_view(request, pk):
+    garden_project = get_object_or_404(models.GardenProject, pk=pk)
+    return render(request, 'gardenplaner/confirm_delete_project.html', {'garden_project': garden_project})   

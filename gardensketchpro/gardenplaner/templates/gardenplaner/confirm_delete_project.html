@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+{% block title %} {{ block.super }}{% endblock title %}
+{% block content %}
+  <h2>Confirm Deletion</h2>
+  <p>Are you sure you want to delete the project "{{ garden_project.project_name }}"?</p>
+
+  <form method="post" action="{% url 'delete_project' pk=garden_project.pk %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+  </form>
+
+  <a href="{% url 'gardenproject_detail' pk=garden_project.pk %}" class="btn btn-secondary">No, Cancel</a>
+{% endblock %}

@@ -8,5 +8,7 @@ urlpatterns = [
     path('my_projects/', views.GardenProjectListView.as_view(), name='my_projects'),
     path('create_project/', views.CreateGardenProjectView.as_view(), name='create_project'),
     path('gardenproject_detail/<int:pk>/', views.GardenProjectDetailView.as_view(), name='gardenproject_detail'),
+    path('delete_project/<int:pk>/', views.delete_project_view, name='delete_project'),
+    path('confirm_delete_project/<int:pk>/', views.confirm_delete_project_view, name='confirm_delete_project'),
    
 ]
