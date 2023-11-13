@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+{% block title %} {{ block.super }}{% endblock title %}
+{% block content %}
+  <h2>{{ garden_project.project_name }} Details</h2>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Project Name: {{ garden_project.project_name }}</h5>
+      <p class="card-text">Created by: {{ garden_project.user.username }}</p>
+      <p class="card-text">Public: {% if garden_project.public %}Yes{% else %}No{% endif %}</p>
+      <!-- Add more details as needed -->
+
+      <a href="{% url 'my_projects' %}" class="btn btn-primary">Back to My Projects</a>
+    </div>
+  </div>
+{% endblock %}

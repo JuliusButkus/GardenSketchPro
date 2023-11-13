@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+{% block title %} {{ block.super }}{% endblock title %}
+{% block content %}
+  <h2>My Garden Projects</h2>
+  <div class="mb-3">
+    <a href="{% url 'create_project' %}" class="btn btn-success">Create New Project</a>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      {% for project in gardenproject_list %}
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">{{ project.project_name }}</h5>
+            <p class="card-text">Created by: {{ project.user.username }}</p>
+            <a href="{% url 'gardenproject_detail' pk=project.pk %}" class="btn btn-primary">View Details</a>
+          </div>
+        </div>
+      {% endfor %}
+
+      <div class="pagination">
+        <span class="step-links">
+          {% if gardenproject_list.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ gardenproject_list.previous_page_number }}">previous</a>
+          {% endif %}
+
+          <span class="current">
+            Page {{ gardenproject_list.number }} of {{ gardenproject_list.paginator.num_pages }}.
+          </span>
+
+          {% if gardenproject_list.has_next %}
+            <a href="?page={{ gardenproject_list.next_page_number }}">next</a>
+            <a href="?page={{ gardenproject_list.paginator.num_pages }}">last &raquo;</a>
+          {% endif %}
+        </span>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <!-- You can include additional content or widgets here -->
+    </div>
+  </div>
+{% endblock %}
+
+
+
+
+
+

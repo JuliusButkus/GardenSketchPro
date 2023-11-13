@@ -27,7 +27,7 @@
                 </div>
                 {% comment %} <a href="javascript:void(0);" class="icon" onclick="myFunction()">&#9776;</a> {% endcomment %}
                 <li class="spacer center"></li>
-                <li>{% trans "my projects"|title %}</li>
+                <li><a href="{% url 'my_projects'%}">{% trans "my projects"|title %}</a></li>
                 {% if user.is_authenticated %}
                     <li>
                         {% if user.profile.photo %}

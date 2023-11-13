@@ -5,11 +5,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator
 from django.db.models.query import QuerySet, Q
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
+from django import forms
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from . import models
+from . import models, forms
 
 
 def index(request: HttpRequest):
@@ -68,4 +69,34 @@ class PlantListView(generic.ListView):
                 Q(name_en__icontains=query) | 
                 Q(name_lt__icontains=query)  
             )
-        return queryset    
+        return queryset   
+
+
+class GardenProjectListView(generic.ListView):
+    model = models.GardenProject
+    template_name = "gardenplaner/my_projects.html"
+    context_object_name = "gardenproject_list"
+    paginate_by = 10
+
+class CreateGardenProjectView(generic.View):
+    template_name = 'gardenplaner/create_project.html'
+
+    def get(self, request, *args, **kwargs):
+        form = forms.GardenProjectForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = forms.GardenProjectForm(request.POST)
+        if form.is_valid():
+            garden_project = form.save(commit=False)
+            garden_project.user = request.user  # Assuming the user is authenticated
+            garden_project.save()
+            return redirect('gardenproject_detail', pk=garden_project.pk)
+        return render(request, self.template_name, {'form': form})
+    
+
+class GardenProjectDetailView(generic.DetailView):
+    model = models.GardenProject
+    template_name = "gardenplaner/gardenproject_detail.html"
+    context_object_name = "garden_project"
+    

@@ -5,4 +5,8 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('plant_types/', views.PlantTypeListView.as_view(), name='plant_types'),
     path('plant_list/', views.PlantListView.as_view(), name='plant_list'),
+    path('my_projects/', views.GardenProjectListView.as_view(), name='my_projects'),
+    path('create_project/', views.CreateGardenProjectView.as_view(), name='create_project'),
+    path('gardenproject_detail/<int:pk>/', views.GardenProjectDetailView.as_view(), name='gardenproject_detail'),
+   
 ]
