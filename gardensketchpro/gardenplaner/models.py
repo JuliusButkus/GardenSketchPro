@@ -221,12 +221,12 @@ class Photo(models.Model):
 
     def save(self, *args, **kwargs) -> None:
         super().save(*args, **kwargs)
-        # if self.image:
-        #     image = Image.open(self.image.path)
-        #     if image.height > 300 or image.width > 500:
-        #         resized_dimensions = (500, 300)
-        #         image.thumbnail(resized_dimensions)
-        #         image.save(self.image.path)
+        if self.image:
+            image = Image.open(self.image.path)
+            if image.height > 300 or image.width > 500:
+                resized_dimensions = (500, 300)
+                image.thumbnail(resized_dimensions)
+                image.save(self.image.path)
 
     def __str__(self):
         return self.image
