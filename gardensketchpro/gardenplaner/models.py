@@ -142,8 +142,7 @@ class GardenProject(models.Model):
     
 
 class Zone(models.Model):
-    name_en = models.CharField(_("name in English language"), max_length=50, blank=True)
-    name_lt = models.CharField(_("name in Lithuanian language"), max_length=50, blank=True)
+    name = models.CharField(_("name in Lithuanian language"), max_length=50, blank=True)
     lenght = models.FloatField(_("enter lenght"))
     width = models.FloatField(_("enter width"))
     garden_project = models.ForeignKey(
@@ -152,6 +151,7 @@ class Zone(models.Model):
         on_delete=models.CASCADE,
         related_name=_("zone"),
     )
+    public = models.BooleanField(_("public"), default=False)
     
     class Meta:
         verbose_name = _("zone")
@@ -163,29 +163,7 @@ class Zone(models.Model):
     def get_absolute_url(self):
         return reverse("zone_detail", kwargs={"pk": self.pk})
 
-
-class ZoneCoposition(models.Model):
-    zone = models.ForeignKey(
-        Zone,
-        verbose_name=_("zone"),
-        on_delete=models.CASCADE,
-        related_name=_("zone_coposition"),
-    )
-    public = models.BooleanField(_("public"), default=False)
-    
-    
-
-    class Meta:
-        verbose_name = _("zone coposition")
-        verbose_name_plural = _("zone copositions")
-
-    def __str__(self):
-        return self.zone
-
-    def get_absolute_url(self):
-        return reverse("zonecoposition_detail", kwargs={"pk": self.pk})
   
-
 class SelectedPlant(models.Model):
     plant = models.ForeignKey(
         Plant, 
@@ -200,9 +178,9 @@ class SelectedPlant(models.Model):
     blooming_period = models.CharField(_("enter blooming period"), max_length=100, blank=True)
     qty = models.IntegerField(_('enter quantity'))
     price = models.FloatField(_('enter plants price of unit'),)
-    zone_composition = models.ForeignKey(
-        ZoneCoposition,
-        verbose_name=_("zone composition"),
+    zone = models.ForeignKey(
+        Zone,
+        verbose_name=_("zone"),
         on_delete=models.CASCADE,
         related_name=_("selected_plant")
         )
@@ -230,8 +208,8 @@ class Photo(models.Model):
             ("WINTER", "WINTER"),
         ])
     composition = models.ForeignKey(
-        ZoneCoposition,
-        verbose_name=_("zone composition"),
+        Zone,
+        verbose_name=_("zone"),
         on_delete=models.CASCADE,
         related_name=_("photo")
         )

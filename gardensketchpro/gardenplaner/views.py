@@ -113,66 +113,6 @@ def confirm_delete_project_view(request, pk):
     return render(request, 'gardenplaner/confirm_delete_project.html', {'garden_project': garden_project}) 
 
 
-# class CreateZoneView(generic.View):
-#     template_name = 'gardenplaner/create_zone.html'
-
-#     def get(self, request, project_id):
-#         garden_project = get_object_or_404(models.GardenProject, pk=project_id)
-#         zone_form = forms.ZoneForm()
-#         composition_form = forms.ZoneCompositionForm()
-#         selected_plant_form = forms.SelectedPlantForm()
-#         photo_form = forms.PhotoForm()
-#         PhotoFormSet = inlineformset_factory(models.ZoneCoposition, models.Photo, fields=('image',), extra=4, can_delete=True)
-
-#         return render(request, self.template_name, {
-#             'zone_form': zone_form,
-#             'composition_form': composition_form,
-#             'selected_plant_form': selected_plant_form,
-#             'photo_form': photo_form,
-#             'photo_formset': PhotoFormSet(),
-#             'garden_project': garden_project
-#         })
-
-#     def post(self, request, project_id):
-#         garden_project = get_object_or_404(models.GardenProject, pk=project_id)
-#         zone_form = forms.ZoneForm(request.POST)
-#         composition_form = forms.ZoneCompositionForm(request.POST)
-#         selected_plant_form = forms.SelectedPlantForm(request.POST)
-#         photo_form = forms.PhotoForm(request.POST, request.FILES)
-#         PhotoFormSet = inlineformset_factory(models.ZoneCoposition, models.Photo, fields=('image',), extra=4, can_delete=True)
-
-#         if zone_form.is_valid() and composition_form.is_valid() and selected_plant_form.is_valid() and photo_form.is_valid():
-#             zone = zone_form.save(commit=False)
-#             zone.garden_project = garden_project
-#             zone.save()
-
-#             composition = composition_form.save(commit=False)
-#             composition.zone = zone
-#             composition.save()
-
-#             selected_plant = selected_plant_form.save(commit=False)
-#             selected_plant.zone_composition = composition
-#             selected_plant.save()
-
-#             photo = photo_form.save(commit=False)
-#             photo.composition = composition
-#             photo.save()
-
-#             photo_formset = PhotoFormSet(request.POST, request.FILES, instance=zone)
-#             if photo_formset.is_valid():
-#                 photo_formset.save()
-#                 messages.success(request, 'Photo added successfully')
-
-#             return redirect('create_zone', project_id=project_id)
-
-#         return render(request, self.template_name), {
-#             'zone_form': zone_form,
-#             'composition_form': composition_form,
-#             'selected_plant_form': selected_plant_form,
-#             'photo_form': photo_form,
-#             'photo_formset': PhotoFormSet(request.POST, request.FILES),
-#             'garden_project': garden_project
-#         }
 class ZoneDetailView(generic.DetailView):
     model = models.Zone
     template_name = 'gardenplaner/zone_detail.html'
@@ -206,3 +146,32 @@ class CreateZoneView(generic.View):
             'zone_form': zone_form,
             'garden_project': garden_project
         })
+
+
+class SelectPlantView(generic.View):
+    template_name = "gardenplaner/selecting_plants.html"
+
+    def get(self, request, zone_id):
+        zone = get_object_or_404(models.Zone, pk=zone_id)
+        selected_plants = models.SelectedPlant.objects.filter(zone=zone)
+
+        form = forms.SelectedPlantForm()
+
+        context = {
+            'zone': zone,
+            'selected_plants': selected_plants,
+            'form': form,
+        }
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, zone_id):
+        zone = get_object_or_404(models.Zone, pk=zone_id)
+
+        form = forms.SelectedPlantForm(request.POST)
+        if form.is_valid():
+            selected_plant = form.save(commit=False)
+            selected_plant.zone = zone
+            selected_plant.save()
+
+        return redirect('selecting_plants', zone_id=zone_id)

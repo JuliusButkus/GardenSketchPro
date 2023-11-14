@@ -14,12 +14,8 @@ class GardenProjectForm(forms.ModelForm):
 class ZoneForm(forms.ModelForm):
     class Meta:
         model = models.Zone
-        fields = ['name_en', 'name_lt', 'lenght', 'width']
+        fields = ['name', 'lenght', 'width', 'public']
 
-class ZoneCompositionForm(forms.ModelForm):
-    class Meta:
-        model = models.ZoneCoposition
-        fields = ['public']
 
 class SelectedPlantForm(forms.ModelForm):
     class Meta:
@@ -31,4 +27,3 @@ class PhotoForm(forms.ModelForm):
         model = models.Photo
         fields = ['image', 'season']
 
-photo_formset = forms.formset_factory(PhotoForm, extra=1)

@@ -12,4 +12,5 @@ urlpatterns = [
     path('confirm_delete_project/<int:pk>/', views.confirm_delete_project_view, name='confirm_delete_project'),
     path('zone_detail/<int:project_id>/<int:pk>/', views.ZoneDetailView.as_view(), name='zone_detail'),
     path('create_zone/<int:project_id>/', views.CreateZoneView.as_view(), name='create_zone'),
+    path('selecting_plants/<int:zone_id>/', views.SelectPlantView.as_view(), name='selecting_plants'),
 ]
