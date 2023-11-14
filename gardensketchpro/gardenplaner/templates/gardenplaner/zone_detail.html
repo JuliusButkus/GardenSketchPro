@@ -17,32 +17,28 @@
 
   <!-- Display Zone Composition details -->
   <h3>Zone Composition</h3>
-  <ul>
-    {% for selected_plant in zone.selected_plant.all %}
-      <li>
-        <p>Plant: {{ selected_plant.plant.name_en }}</p>
-        <p class="card-text">Color: {{ selected_plant.color.name_en }}</p>
-        <p class="card-text">Blooming Period: {{ selected_plant.blooming_period }}</p>
-        <p class="card-text">Quantity: {{ selected_plant.qty }}</p>
-        <p class="card-text">Price: {{ selected_plant.price }}</p>
-      </li>
-    {% endfor %}
-  </ul>
+  
   <!-- Display Selected Plants details -->
   <button><a href="{% url 'selecting_plants' zone_id=zone.pk %}">Select Plants</a></button>
   <h3>Selected Plants</h3>
   {% for selected_plant in zone.selected_plant.all %}
-    <p>Plant: {{ selected_plant.plant.name }} - Color: {{ selected_plant.color.name }} - Blooming Period: {{ selected_plant.blooming_period }} - Quantity: {{ selected_plant.qty }} - Price: {{ selected_plant.price }}</p>
+    <p>Plant: {{ selected_plant.plant.name_en }} - Color: {{ selected_plant.color.name_en }} - Blooming Period: {{ selected_plant.blooming_period }} - Quantity: {{ selected_plant.qty }} - Price: {{ selected_plant.price }}</p>
     <!-- Add more selected plant details as needed -->
   {% endfor %}
 
   <!-- Display Photos details -->
   <h3>Photos</h3>
-  {% for photo in zone.zone_coposition.photo.all %}
-    <img src="{{ photo.image.url }}" alt="{{ photo.image }}">
-    <p>Season: {{ photo.get_season_display }}</p>
-    <!-- Add more photo details as needed -->
-  {% endfor %}
+  <button><a href="{% url 'add_photo' zone_id=zone.pk %}">ADD Photo</a></button>
+  {% for photo in photos %}
+    <div>
+        {% if photo.image %}
+            <img src="{{ photo.image.url }}" alt="Photo">
+        {% else %}
+            <p>No image available</p>
+        {% endif %}
+        <p>season: {{ photo.season }}</p>
+    </div>
+{% endfor %}
 
   <a href="{% url 'gardenproject_detail' pk=zone.garden_project.pk %}" class="btn btn-primary">Back to Garden Project</a>
 {% endblock %}

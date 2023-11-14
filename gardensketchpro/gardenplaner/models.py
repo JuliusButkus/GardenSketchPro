@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from tinymce.models import HTMLField
 from django.urls import reverse
-
+from PIL import Image
 
 User = get_user_model()
 
@@ -197,7 +197,7 @@ class SelectedPlant(models.Model):
 
 
 class Photo(models.Model):
-    image = models.ImageField(_("add image"), upload_to="photos")
+    image = models.ImageField(_("add image"), upload_to='photos/', null=True, blank=True)
     season = models.CharField(
         _("select season"), 
         max_length=100, 
@@ -207,7 +207,7 @@ class Photo(models.Model):
             ("AUTUMN", "AUTUMN"), 
             ("WINTER", "WINTER"),
         ])
-    composition = models.ForeignKey(
+    zone = models.ForeignKey(
         Zone,
         verbose_name=_("zone"),
         on_delete=models.CASCADE,
@@ -219,11 +219,26 @@ class Photo(models.Model):
         verbose_name = _("photo")
         verbose_name_plural = _("photos")
 
+    def save(self, *args, **kwargs) -> None:
+        super().save(*args, **kwargs)
+        # if self.image:
+        #     image = Image.open(self.image.path)
+        #     if image.height > 300 or image.width > 500:
+        #         resized_dimensions = (500, 300)
+        #         image.thumbnail(resized_dimensions)
+        #         image.save(self.image.path)
+
     def __str__(self):
         return self.image
-
+    
     def get_absolute_url(self):
-        return reverse("photo_detail", kwargs={"pk": self.pk})
+        if self.image:
+            return reverse("zone_detail", kwargs={"pk": self.pk})
+        else:
+            # Define a default URL or handle the case when there is no image
+            return reverse("default_url")
+    # def get_absolute_url(self):
+    #     return reverse("zone_detail", kwargs={"pk": self.pk})
 
     
 

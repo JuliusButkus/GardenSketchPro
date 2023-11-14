@@ -11,6 +11,7 @@ from django.forms.models import inlineformset_factory
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from . import models, forms
+from django.views.decorators.csrf import csrf_protect
 
 
 def index(request: HttpRequest):
@@ -118,6 +119,11 @@ class ZoneDetailView(generic.DetailView):
     template_name = 'gardenplaner/zone_detail.html'
     context_object_name = 'zone'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['photos'] = models.Photo.objects.filter(zone=self.object)
+        return context
+
 
 class CreateZoneView(generic.View):
     template_name = 'gardenplaner/create_zone.html'
@@ -175,3 +181,41 @@ class SelectPlantView(generic.View):
             selected_plant.save()
 
         return redirect('selecting_plants', zone_id=zone_id)
+    
+
+class AddPhotoView(generic.View):  # Inherit from django.views.View
+    template_name = "gardenplaner/add_photo.html"  # Corrected the template name
+
+    def get(self, request, zone_id):
+        zone = get_object_or_404(models.Zone, pk=zone_id)
+        photos = models.Photo.objects.filter(zone=zone).all()
+        photo_form = forms.PhotoForm()  # Use the correct form from your forms module
+
+        context = {
+            'zone': zone,
+            'photos': photos,
+            'photo_form': photo_form,
+        }
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, zone_id):
+        zone = get_object_or_404(models.Zone, pk=zone_id)
+
+        photo_form = forms.PhotoForm(request.POST, request.FILES)  # Use the correct form from your forms module
+
+        if photo_form.is_valid():
+            photo = photo_form.save(commit=False)
+            photo.zone = zone
+            photo.save()
+            return redirect('add_photo', zone_id=zone_id)
+        else:
+            # Form is not valid, render the template with the form and errors
+            photos = models.Photo.objects.filter(zone=zone).all()
+            context = {
+                'zone': zone,
+                'photos': photos,
+                'photo_form': photo_form,
+            }
+            return render(request, self.template_name, context)
+        

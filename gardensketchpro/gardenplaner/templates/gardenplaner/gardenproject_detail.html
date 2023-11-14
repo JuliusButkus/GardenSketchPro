@@ -11,8 +11,7 @@
       <p class="card-text">Public: {% if garden_project.public %}Yes{% else %}No{% endif %}</p>
       {% for zone in garden_project.zone.all %}
     <li>
-        <p><a href="{% url 'zone_detail' project_id=garden_project.pk pk=zone.pk %}">{{ zone.name_en }}</a></p>
-        <p><a href="{% url 'zone_detail' project_id=garden_project.pk pk=zone.pk %}">{{ zone.name_lt }}</a></p>
+        <p><a href="{% url 'zone_detail' project_id=garden_project.pk pk=zone.pk %}">{{ zone.name }}</a></p>
         <p class="card-text">Length: {{ zone.length }}</p>
         <p class="card-text">Width: {{ zone.width }}</p>
     </li>
