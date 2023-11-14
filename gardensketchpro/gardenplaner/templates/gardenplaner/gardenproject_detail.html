@@ -12,7 +12,7 @@
       {% for zone in garden_project.zone.all %}
     <li>
         <p><a href="{% url 'zone_detail' project_id=garden_project.pk pk=zone.pk %}">{{ zone.name_en }}</a></p>
-        <p class="card-text">Zone: {{ zone.name_lt }}</p>
+        <p><a href="{% url 'zone_detail' project_id=garden_project.pk pk=zone.pk %}">{{ zone.name_lt }}</a></p>
         <p class="card-text">Length: {{ zone.length }}</p>
         <p class="card-text">Width: {{ zone.width }}</p>
     </li>

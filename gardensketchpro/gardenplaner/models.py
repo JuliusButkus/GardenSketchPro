@@ -86,8 +86,8 @@ class Color(models.Model):
 
 
 class Plant(models.Model):
-    name_en = models.CharField(max_length=100, unique=True)
-    name_lt = models.CharField(max_length=100, unique=True)
+    name_en = models.CharField(max_length=100)
+    name_lt = models.CharField(max_length=100)
     description_en = models.TextField(max_length=1000, blank=True)
     description_lt = models.TextField(max_length=1000, blank=True)
     size = models
