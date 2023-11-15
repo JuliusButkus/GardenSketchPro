@@ -12,7 +12,7 @@
 
   <h3>Selected Plants</h3>
   <ul>
-    {% for selected_plant in zone.selected_plant.all %}
+    {% for plant in object_list %}
       <li>
         <p>Plant: {{ selected_plant.plant.name_en }}</p>
         <p class="card-text">Color: {{ selected_plant.color.name_en }}</p>

@@ -7,7 +7,7 @@ from django.db.models.query import QuerySet, Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
-from django.forms.models import BaseModelForm, inlineformset_factory
+from django.forms.models import BaseModelForm
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from . import models, forms
@@ -15,13 +15,6 @@ from django.views.decorators.csrf import csrf_protect
 
 
 def index(request: HttpRequest):
-    """
-    Renders the 'index.html' template with the given request and context.
-    Parameters:
-        request (HttpRequest): The HTTP request object.
-    Returns:
-        HttpResponse: The rendered 'index.html' template with the given context.
-    """
     num_visits = request.session.get('num_visits', 1)
     request.session['num_visits'] = num_visits + 1
     context = {
@@ -79,6 +72,7 @@ class GardenProjectListView(generic.ListView):
     context_object_name = "gardenproject_list"
     paginate_by = 10
 
+
 class CreateGardenProjectView(generic.View):
     template_name = 'gardenplaner/create_project.html'
 
@@ -101,6 +95,11 @@ class GardenProjectDetailView(generic.DetailView):
     template_name = "gardenplaner/gardenproject_detail.html"
     context_object_name = "garden_project"
 
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['zones'] = models.Zone.objects.filter(garden_project=self.object)
+    #     return context
+
 def delete_project_view(request, pk):
     garden_project = get_object_or_404(models.GardenProject, pk=pk)
     if request.method == 'POST':
@@ -108,11 +107,9 @@ def delete_project_view(request, pk):
         return redirect('my_projects')
     return render(request, 'gardenplaner/gardenproject_confirm_delete.html', {'garden_project': garden_project})
 
-
 def confirm_delete_project_view(request, pk):
     garden_project = get_object_or_404(models.GardenProject, pk=pk)
     return render(request, 'gardenplaner/confirm_delete_project.html', {'garden_project': garden_project}) 
-
 
 class ZoneDetailView(generic.DetailView):
     model = models.Zone
@@ -123,10 +120,10 @@ class ZoneDetailView(generic.DetailView):
         context = super().get_context_data(**kwargs)
         context['photos'] = models.Photo.objects.filter(zone=self.object)
         context['plants_dropdown_form'] = forms.PlantDropdownForm
+        context['selected_plants'] = models.SelectedPlant.objects.filter(zone=self.object)
         return context
     
     
-
 class CreateZoneView(generic.View):
     template_name = 'gardenplaner/create_zone.html'
 
@@ -146,9 +143,7 @@ class CreateZoneView(generic.View):
             zone = zone_form.save(commit=False)
             zone.garden_project = garden_project
             zone.save()
-
-            # Redirect to the zone_detail view
-            return redirect('zone_detail', project_id=project_id, pk=zone.pk)
+            return redirect('zone_detail',  pk=zone.id)
 
         return render(request, self.template_name, {
             'zone_form': zone_form,
@@ -164,20 +159,16 @@ class AddPhotoView(generic.View):
         zone = get_object_or_404(models.Zone, pk=zone_id)
         photos = models.Photo.objects.filter(zone=zone).all()
         photo_form = forms.PhotoForm()  # Use the correct form from your forms module
-
         context = {
             'zone': zone,
             'photos': photos,
             'photo_form': photo_form,
         }
-
         return render(request, self.template_name, context)
 
     def post(self, request, zone_id):
         zone = get_object_or_404(models.Zone, pk=zone_id)
-
         photo_form = forms.PhotoForm(request.POST, request.FILES)  
-
         if photo_form.is_valid():
             photo = photo_form.save(commit=False)
             photo.zone = zone
@@ -204,14 +195,12 @@ class AddPlantView(generic.CreateView):
         context['plant'] = get_object_or_404(models.Plant, pk=self.request.GET.get('plant'))
         return context
 
-
     def get_initial(self) -> dict[str, Any]:
         initial = super().get_initial()
         initial['zone'] = self.kwargs['zone_id']
         initial['plant'] = self.request.GET.get('plant')
         return initial
     
-
     def get_form(self, form_class: type[BaseModelForm] | None = ...) -> BaseModelForm:
         form = forms.SelectedPlantForm(initial=self.get_initial())
         form.fields['color'].queryset = models.Color.objects.filter(plant=self.request.GET.get('plant'))

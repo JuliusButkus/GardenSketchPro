@@ -3,33 +3,25 @@
 {% block title %} {{ block.super }}{% endblock title %}
 {% block content %}
   <h2>Zone Details</h2>
-
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Name (English): {{ zone.name_en }}</h5>
-      <p class="card-text">Name (Lithuanian): {{ zone.name_lt }}</p>
-      <p class="card-text">Length: {{ zone.length }}</p>
+      <h5 class="card-title">Name : {{ zone.name }}</h5>
+      <p class="card-text">Length: {{ zone.lenght }}</p>
       <p class="card-text">Width: {{ zone.width }}</p>
       <p class="card-text">Garden Project: {{ zone.garden_project.project_name }}</p>
-      <!-- Add more details as needed -->
     </div>
   </div>
   <form method="GET" action="{% url 'add_plant' zone_id=zone.pk %}">
     {{ plants_dropdown_form.as_p }}
     <button type="submit" class="btn btn-primary">Add Plant</button>
   </form>
-  <!-- Display Zone Composition details -->
-  <h3>Zone Composition</h3>
-  
-  <!-- Display Selected Plants details -->
 
   <h3>Selected Plants</h3>
-  {% for selected_plant in zone.selected_plant.all %}
-    <p>Plant: {{ selected_plant.plant.name_en }} - Color: {{ selected_plant.color.name_en }} - Blooming Period: {{ selected_plant.blooming_period }} - Quantity: {{ selected_plant.qty }} - Price: {{ selected_plant.price }}</p>
-    <!-- Add more selected plant details as needed -->
-  {% endfor %} 
+  {{ zone.selected_plants.all }}
+  {% for selected_plant in zone.selected_plants.all %}
+    <p>Plant: {{ selected_plant.plant.name_en }} - Color: {{ plant.color.name_en }} - Blooming Period: {{ plant.blooming_period }} - Quantity: {{ plant.qty }} - Price: {{ plant.price }}</p>
+  {% endfor %}
 
-  <!-- Display Photos details -->
   <h3>Photos</h3>
   <button><a href="{% url 'add_photo' zone_id=zone.pk %}">ADD Photo</a></button>
   {% for photo in photos %}

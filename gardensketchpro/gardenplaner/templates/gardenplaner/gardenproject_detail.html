@@ -10,18 +10,18 @@
       <p class="card-text">Created by: {{ garden_project.user.username }}</p>
       <p class="card-text">Public: {% if garden_project.public %}Yes{% else %}No{% endif %}</p>
       {% for zone in garden_project.zone.all %}
-    <li>
-        <p><a href="{% url 'zone_detail' pk=zone.pk %}">{{ zone.name }}</a></p>
-        <p class="card-text">Length: {{ zone.length }}</p>
-        <p class="card-text">Width: {{ zone.width }}</p>
-    </li>
-{% endfor %}
-      <form method="post" action="{% url 'delete_project' pk=garden_project.pk %}" style="display: inline;">
+        <li>
+          <p><a href="{% url 'zone_detail' pk=zone.id %}">{{ zone.name }}</a></p>
+          <p class="card-text">Length: {{ zone.length }}</p>
+          <p class="card-text">Width: {{ zone.width }}</p>
+        </li>
+      {% endfor %}
+      <form method="post" action="{% url 'delete_project' pk=garden_project.id %}" style="display: inline;">
         {% csrf_token %}
-        <button type="submit" class="btn btn-danger"><a href="{% url 'confirm_delete_project' pk=garden_project.pk %}">Delete Project</a></button>
+        <button type="submit" class="btn btn-danger"><a href="{% url 'confirm_delete_project' pk=garden_project.id %}">Delete Project</a></button>
       </form>
       
-        <button type="submit" class="btn btn-danger"><a href="{% url 'create_zone' project_id=garden_project.pk %}" class="btn btn-success">Create Zone</a></button>
+        <button type="submit" class="btn btn-danger"><a href="{% url 'create_zone' project_id=garden_project.id %}" class="btn btn-success">Create Zone</a></button>
     
       <a href="{% url 'my_projects' %}" class="btn btn-primary">Back to My Projects</a>
     </div>

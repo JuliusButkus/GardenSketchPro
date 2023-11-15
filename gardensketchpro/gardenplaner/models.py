@@ -95,17 +95,17 @@ class Plant(models.Model):
         Type,
         verbose_name=_("type"),
         on_delete=models.CASCADE, 
-        related_name=_("plant"),)
+        related_name=_("plants"),)
     colors = models.ManyToManyField(
         Color,
         verbose_name=_("color"), 
-        related_name=_("plant"),
+        related_name=_("plants"),
         )
     planting_time = models.ForeignKey(
         PlantTime, 
         verbose_name=_("planting time"),
         on_delete=models.CASCADE,
-        related_name=_("plant"))
+        related_name=_("plants"))
     
     class Meta:
         verbose_name = _("plant")
@@ -125,7 +125,7 @@ class GardenProject(models.Model):
         User,
         verbose_name=_("user"),
         on_delete=models.CASCADE,
-        related_name=_("garden_project"),
+        related_name=_("garden_projects"),
     )
     project_name = models.CharField(_("project name"), max_length=100)
     public = models.BooleanField(_("public"), default=False)
@@ -149,7 +149,7 @@ class Zone(models.Model):
         GardenProject,
         verbose_name=_("garden project"),
         on_delete=models.CASCADE,
-        related_name=_("zone"),
+        related_name=_("zones"),
     )
     public = models.BooleanField(_("public"), default=False)
     
@@ -158,7 +158,7 @@ class Zone(models.Model):
         verbose_name_plural = _("zones")
 
     def __str__(self):
-        return self.name_en
+        return self.name
 
     def get_absolute_url(self):
         return reverse("zone_detail", kwargs={"pk": self.pk})
@@ -169,12 +169,12 @@ class SelectedPlant(models.Model):
         Plant, 
         verbose_name=_("plant"),
         on_delete=models.CASCADE,
-        related_name=_("selected_plant"))
+        related_name=_("selected_plants"))
     color = models.ForeignKey(
         Color,
         verbose_name=_("color"), 
         on_delete=models.CASCADE,
-        related_name=_("selected_plant"))
+        related_name=_("selected_plants"))
     blooming_period = models.CharField(_("enter blooming period"), max_length=100, blank=True)
     qty = models.IntegerField(_('enter quantity'))
     price = models.FloatField(_('enter plants price of unit'),)
@@ -182,7 +182,7 @@ class SelectedPlant(models.Model):
         Zone,
         verbose_name=_("zone"),
         on_delete=models.CASCADE,
-        related_name=_("selected_plant")
+        related_name=_("selected_plants")
         )
 
     class Meta:
@@ -211,7 +211,7 @@ class Photo(models.Model):
         Zone,
         verbose_name=_("zone"),
         on_delete=models.CASCADE,
-        related_name=_("photo")
+        related_name=_("photos")
         )
         
 
