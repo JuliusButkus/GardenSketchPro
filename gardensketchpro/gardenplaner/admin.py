@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . import models
+from . import models, forms
 
 
 class TypeAdmin(admin.ModelAdmin):
@@ -20,12 +20,19 @@ class PlantTimeAdmin(admin.ModelAdmin):
 class PlantAdmin(admin.ModelAdmin):
     list_display = (
         'name_en', 'name_lt', 'description_en', 'description_lt',
-        'type', 'planting_time'
+        'type', 'planting_time', 'display_colors'
         )
     list_filter = ('name_en', 'name_lt', 'type')
 
+    def display_colors(self, obj):
+        return ', '.join([color.name_en for color in obj.colors.all()])
+
+class SelectedPlantAdmin(admin.ModelAdmin):
+    form = forms.SelectedPlantForm
 
 
+
+admin.site.register(models.SelectedPlant, SelectedPlantAdmin)
 admin.site.register(models.Type, TypeAdmin)
 admin.site.register(models.Color, ColorAdmin)
 admin.site.register(models.PlantTime, PlantTimeAdmin)

@@ -17,10 +17,21 @@ class ZoneForm(forms.ModelForm):
         fields = ['name', 'lenght', 'width', 'public']
 
 
+class PlantDropdownForm(forms.ModelForm):
+    class Meta:
+        model = models.SelectedPlant
+        fields = ['plant']
+
+
 class SelectedPlantForm(forms.ModelForm):
     class Meta:
         model = models.SelectedPlant
-        fields = ['plant', 'color', 'blooming_period', 'qty', 'price']
+        fields = ['plant', 'color', 'qty', 'blooming_period', 'price', 'zone']
+        widgets = {
+            'plant': forms.HiddenInput(),
+            'zone': forms.HiddenInput(),
+        }
+
 
 class PhotoForm(forms.ModelForm):
     class Meta:

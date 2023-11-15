@@ -14,17 +14,20 @@
       <!-- Add more details as needed -->
     </div>
   </div>
-
+  <form method="GET" action="{% url 'add_plant' zone_id=zone.pk %}">
+    {{ plants_dropdown_form.as_p }}
+    <button type="submit" class="btn btn-primary">Add Plant</button>
+  </form>
   <!-- Display Zone Composition details -->
   <h3>Zone Composition</h3>
   
   <!-- Display Selected Plants details -->
-  <button><a href="{% url 'selecting_plants' zone_id=zone.pk %}">Select Plants</a></button>
+
   <h3>Selected Plants</h3>
   {% for selected_plant in zone.selected_plant.all %}
     <p>Plant: {{ selected_plant.plant.name_en }} - Color: {{ selected_plant.color.name_en }} - Blooming Period: {{ selected_plant.blooming_period }} - Quantity: {{ selected_plant.qty }} - Price: {{ selected_plant.price }}</p>
     <!-- Add more selected plant details as needed -->
-  {% endfor %}
+  {% endfor %} 
 
   <!-- Display Photos details -->
   <h3>Photos</h3>

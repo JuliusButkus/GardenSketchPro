@@ -2,9 +2,9 @@
 {% load static i18n %}
 {% block title %} {{ block.super }}{% endblock title %}
 {% block content %}
-  <h2>Select Plants for {{ zone_composition.zone.name_en }}</h2>
+  <h2>Select Plants  </h2>
 
-  <form method="post">
+  <form method="post" action="{{ request.path }}?plant={{ request.GET.plant }}">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn btn-primary">Add Plant</button>
@@ -23,5 +23,5 @@
     {% endfor %}
   </ul>
 
-  <a href="{% url 'zone_detail' project_id=zone.garden_project.pk pk=zone.pk %}" class="btn btn-primary">Back to Zone</a>
+  <a href="{% url 'zone_detail' pk=zone.id %}" class="btn btn-primary">Back to Zone</a>
 {% endblock %}

@@ -7,7 +7,7 @@ from django.db.models.query import QuerySet, Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
-from django.forms.models import inlineformset_factory
+from django.forms.models import BaseModelForm, inlineformset_factory
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from . import models, forms
@@ -122,8 +122,10 @@ class ZoneDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['photos'] = models.Photo.objects.filter(zone=self.object)
+        context['plants_dropdown_form'] = forms.PlantDropdownForm
         return context
-
+    
+    
 
 class CreateZoneView(generic.View):
     template_name = 'gardenplaner/create_zone.html'
@@ -154,37 +156,9 @@ class CreateZoneView(generic.View):
         })
 
 
-class SelectPlantView(generic.View):
-    template_name = "gardenplaner/selecting_plants.html"
 
-    def get(self, request, zone_id):
-        zone = get_object_or_404(models.Zone, pk=zone_id)
-        selected_plants = models.SelectedPlant.objects.filter(zone=zone)
-
-        form = forms.SelectedPlantForm()
-
-        context = {
-            'zone': zone,
-            'selected_plants': selected_plants,
-            'form': form,
-        }
-
-        return render(request, self.template_name, context)
-
-    def post(self, request, zone_id):
-        zone = get_object_or_404(models.Zone, pk=zone_id)
-
-        form = forms.SelectedPlantForm(request.POST)
-        if form.is_valid():
-            selected_plant = form.save(commit=False)
-            selected_plant.zone = zone
-            selected_plant.save()
-
-        return redirect('selecting_plants', zone_id=zone_id)
-    
-
-class AddPhotoView(generic.View):  # Inherit from django.views.View
-    template_name = "gardenplaner/add_photo.html"  # Corrected the template name
+class AddPhotoView(generic.View):  
+    template_name = "gardenplaner/add_photo.html" 
 
     def get(self, request, zone_id):
         zone = get_object_or_404(models.Zone, pk=zone_id)
@@ -202,7 +176,7 @@ class AddPhotoView(generic.View):  # Inherit from django.views.View
     def post(self, request, zone_id):
         zone = get_object_or_404(models.Zone, pk=zone_id)
 
-        photo_form = forms.PhotoForm(request.POST, request.FILES)  # Use the correct form from your forms module
+        photo_form = forms.PhotoForm(request.POST, request.FILES)  
 
         if photo_form.is_valid():
             photo = photo_form.save(commit=False)
@@ -210,7 +184,6 @@ class AddPhotoView(generic.View):  # Inherit from django.views.View
             photo.save()
             return redirect('add_photo', zone_id=zone_id)
         else:
-            # Form is not valid, render the template with the form and errors
             photos = models.Photo.objects.filter(zone=zone).all()
             context = {
                 'zone': zone,
@@ -218,4 +191,29 @@ class AddPhotoView(generic.View):  # Inherit from django.views.View
                 'photo_form': photo_form,
             }
             return render(request, self.template_name, context)
-        
+
+
+class AddPlantView(generic.CreateView):
+    model = models.SelectedPlant
+    form_class = forms.SelectedPlantForm
+    template_name = 'gardenplaner/add_plant.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['zone'] = get_object_or_404(models.Zone, pk=self.kwargs['zone_id'])
+        context['plant'] = get_object_or_404(models.Plant, pk=self.request.GET.get('plant'))
+        return context
+
+
+    def get_initial(self) -> dict[str, Any]:
+        initial = super().get_initial()
+        initial['zone'] = self.kwargs['zone_id']
+        initial['plant'] = self.request.GET.get('plant')
+        return initial
+    
+
+    def get_form(self, form_class: type[BaseModelForm] | None = ...) -> BaseModelForm:
+        form = forms.SelectedPlantForm(initial=self.get_initial())
+        form.fields['color'].queryset = models.Color.objects.filter(plant=self.request.GET.get('plant'))
+
+        return form

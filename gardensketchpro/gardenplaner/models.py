@@ -96,7 +96,7 @@ class Plant(models.Model):
         verbose_name=_("type"),
         on_delete=models.CASCADE, 
         related_name=_("plant"),)
-    color = models.ManyToManyField(
+    colors = models.ManyToManyField(
         Color,
         verbose_name=_("color"), 
         related_name=_("plant"),
